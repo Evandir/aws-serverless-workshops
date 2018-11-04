@@ -70,11 +70,11 @@ No console do Amazon API Gateway, crie um novo autorizador do pool de usuários 
 
 #### Verifique a configuração do seu autorizador
 
-1. Abra uma nova aba do navegador e visite `/ ride.html` no domínio do seu site.
+1. Abra uma nova aba do navegador e visite `/ride.html` no domínio do seu site.
 
-1. Se você for redirecionado para a página de entrada, entre com o usuário que você criou no último módulo. Você será redirecionado de volta para `/ ride.html`.
+1. Se você for redirecionado para a página de entrada, entre com o usuário que você criou no último módulo. Você será redirecionado de volta para `/ride.html`.
 
-1. Copie o token de autenticação da notificação no `/ ride.html`,
+1. Copie o token de autenticação da notificação no `/ride.html`,
 
 1. Volte para a guia anterior onde você acabou de criar o Autorizador
 
@@ -89,7 +89,7 @@ No console do Amazon API Gateway, crie um novo autorizador do pool de usuários 
 </p> </details>
 
 ### 3. Crie um novo recurso e método
-Crie um novo recurso chamado / ride na sua API. Em seguida, crie um método POST para esse recurso e configure-o para usar uma integração de proxy do Lambda respaldada pela função RequestUnicorn criada na primeira etapa deste módulo.
+Crie um novo recurso chamado /ride na sua API. Em seguida, crie um método POST para esse recurso e configure-o para usar uma integração de proxy do Lambda respaldada pela função RequestUnicorn criada na primeira etapa deste módulo.
 
 <details>
 <summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
@@ -108,7 +108,7 @@ Crie um novo recurso chamado / ride na sua API. Em seguida, crie um método POST
 
     ![Criar captura de tela do recurso](../images/create-resource.png)
 
-1. Com o recém-criado recurso `/ ride` selecionado, no menu suspenso ** Ação **, selecione ** Criar Método **.
+1. Com o recém-criado recurso `/ride` selecionado, no menu suspenso ** Ação **, selecione ** Criar Método **.
 
 1. Selecione `POST` na nova lista suspensa que aparece, depois ** clique na marca de seleção **.
 
@@ -203,7 +203,7 @@ Se você completou o módulo 2 manualmente, você pode editar o arquivo `config.
 
 ** Nota: ** É possível que você veja um atraso entre atualizar o arquivo config.js no seu bucket do S3 e quando o conteúdo atualizado estiver visível em seu navegador. Você também deve garantir que você limpe o cache do navegador antes de executar as etapas a seguir.
 
-1. Visite `/ ride.html` sob o domínio do seu site.
+1. Visite `/ride.html` sob o domínio do seu site.
 
 1. Se você for redirecionado para a página de login, faça login com o usuário que você criou no módulo anterior.
 
@@ -211,6 +211,6 @@ Se você completou o módulo 2 manualmente, você pode editar o arquivo `config.
 
 1. Escolha ** Solicitar Unicórnio **. Você deve ver uma notificação na barra lateral direita de que um unicórnio está a caminho e, em seguida, ver um ícone de unicórnio voando para o seu local de retirada.
 
-Parabéns, você completou o Workshop de Aplicações Web Wild Rydes! Confira nossos [outros workshops] (../../ README.md # workshops) cobrindo casos adicionais de uso sem servidor.
+Parabéns, você completou o Workshop de Aplicações Web Wild Rydes!
 
-Veja o [guia de limpeza] deste workshop (../ 9_CleanUp) para obter instruções sobre como excluir os recursos que você criou.
+Veja o [guia de limpeza] deste workshop (../9_CleanUp) para obter instruções sobre como excluir os recursos que você criou.
