@@ -138,7 +138,7 @@ O arquivo [/js/config.js](../1_StaticWebHosting/website/js/config.js) contém co
 
     ![Successful login screenshot](../images/successful-login.png)
 
-Depois de ter logado com sucesso em sua aplicação web, você pode prosseguir para o próximo módulo, ![Serverless Backend(../3_ServerlessBackend).
+Depois de ter logado com sucesso em sua aplicação web, você pode prosseguir para o próximo módulo, ![Serverless Backend](../3_ServerlessBackend)
 
 ### Extra
 
