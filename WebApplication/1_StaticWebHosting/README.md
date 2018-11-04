@@ -1,4 +1,4 @@
-# Módulo 1: Static Web Hosting com Amazon S3
+# Módulo 1: Website estático com Amazon S3
 
 Neste módulo, você configurará o Amazon Simple Storage Service (S3) para hospedar os recursos estáticos do seu aplicativo da web. Nos módulos subseqüentes, você adicionará funcionalidade dinâmica a essas páginas usando JavaScript para chamar APIs RESTful remotas criadas com o AWS Lambda e o Amazon API Gateway.
 
