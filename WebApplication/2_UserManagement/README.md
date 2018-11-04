@@ -126,19 +126,19 @@ O arquivo [/js/config.js](../1_StaticWebHosting/website/js/config.js) contém co
 
 ## Validação da implementação
 
-1. Visite `/ register.html` no domínio do seu website ou escolha o botão ** Giddy Up! ** na página inicial do seu site.
+1. Visite `/register.html` no domínio do seu website ou escolha o botão ** Giddy Up! ** na página inicial do seu site.
 
 1. Preencha o formulário de inscrição e escolha ** Let's Ryde **. Você pode usar seu próprio e-mail. Certifique-se de escolher uma senha que contenha pelo menos uma letra maiúscula, um número e um caractere especial. Não esqueça a senha que você digitou para mais tarde. Você deve ver um alerta que confirme que seu usuário foi criado.
 
-  1. Se você usou um endereço de e-mail controlado por você, pode concluir o processo de verificação da conta acessando `/ verify.html` no domínio do seu website e inserindo o código de verificação que lhe foi enviado por e-mail. Por favor, note que o email de verificação pode acabar na sua pasta de spam. Para implantações reais, recomendamos [configurar seu pool de usuários para usar o Amazon Simple Email Service] (http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-message-customizations.html# cognito-user-pool-settings-ses-autorização-para-enviar-e-mail) para enviar e-mails de um domínio que você possui.
+  1. Se você usou um endereço de e-mail controlado por você, pode concluir o processo de verificação da conta acessando `/verify.html` no domínio do seu website e inserindo o código de verificação que lhe foi enviado por e-mail. Por favor, note que o email de verificação pode acabar na sua pasta de spam. Para implantações reais, recomendamos [configurar seu pool de usuários para usar o Amazon Simple Email Service] (http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-message-customizations.html# cognito-user-pool-settings-ses-autorização-para-enviar-e-mail) para enviar e-mails de um domínio que você possui.
 
-1. Depois de confirmar o novo usuário usando a página `/ verify.html` ou o console do Cognito, visite o arquivo` / signin.html` e efetue login usando o endereço de e-mail e a senha digitados durante a etapa de registro.
+1. Depois de confirmar o novo usuário usando a página `/verify.html` ou o console do Cognito, visite o arquivo` /signin.html` e efetue login usando o endereço de e-mail e a senha digitados durante a etapa de registro.
 
-1. Se tiver sucesso, você deve ser redirecionado para `/ ride.html`. Você deve ver uma notificação de que a API não está configurada.
+1. Se tiver sucesso, você deve ser redirecionado para `/ride.html`. Você deve ver uma notificação de que a API não está configurada.
 
     ![Successful login screenshot](../images/successful-login.png)
 
-Depois de ter logado com sucesso em sua aplicação web, você pode prosseguir para o próximo módulo, [Serverless Backend](../3_ServerlessBackend).
+Depois de ter logado com sucesso em sua aplicação web, você pode prosseguir para o próximo módulo, ![Serverless Backend(../3_ServerlessBackend).
 
 ### Extra
 
