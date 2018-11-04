@@ -170,7 +170,7 @@ Se você completou o módulo 2 manualmente, você pode editar o arquivo `config.
 
     Um exemplo de um arquivo `config.js` completo está incluído abaixo. Note que os valores reais em seu arquivo serão diferentes.
 
-    `` `JavaScript
+    ```JavaScript
     window._config = {
         cognito: {
             userPoolId: 'us-west-2_uXboG5pAb', // por exemplo us-east-2_uXboG5pAb
@@ -181,7 +181,7 @@ Se você completou o módulo 2 manualmente, você pode editar o arquivo `config.
             invokeUrl: 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod' // por exemplo https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod,
         }
     };
-    `` `
+    ```
 
 1. Salve suas alterações localmente.
 
