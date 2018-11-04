@@ -68,7 +68,7 @@ Se você já tiver a CLI instalada e configurada, poderá usá-la para copiar os
 
 Execute o seguinte comando, certificando-se de substituir "YOUR_BUCKET_NAME" pelo nome usado na seção anterior e "YOUR_BUCKET_REGION" pelo código de região (por exemplo, us-east-2) onde você criou seu bucket.
 
-     aws s3 sync s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/site s3://YOUR_BUCKET_NAME-região SEU_BUCKET_REGION
+     aws s3 sync s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website s3://YOUR_BUCKET_NAME --region YOUR_BUCKET_REGION
 
 Se o comando foi bem-sucedido, você verá uma lista de objetos que foram copiados para o seu bucket.
 </p></details>
