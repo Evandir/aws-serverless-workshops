@@ -2,7 +2,7 @@
 
 Neste módulo, você usará o API Gateway para expor a função do Lambda construída no módulo anterior como uma API RESTful. Esta API estará acessível na Internet pública. Ele será protegido usando o pool de usuários do Amazon Cognito que você criou no módulo anterior. Usando essa configuração, você transformará seu site hospedado estaticamente em um aplicativo dinâmico da Web, adicionando o JavaScript do lado do cliente que faz chamadas AJAX para as APIs expostas.
 
-![Dynamic web app architecture](../imagens/restful-api-architecture.png)
+![Dynamic web app architecture](../images/restful-api-architecture.png)
 
 O diagrama acima mostra como o componente do API Gateway que você criará neste módulo se integra aos componentes existentes que você criou anteriormente. Os itens em cinza são peças que você já implementou nas etapas anteriores.
 
@@ -34,7 +34,7 @@ Use o console do Amazon API Gateway para criar uma nova API.
 
 1. Escolha ** Criar API **
 
-    ![Criar captura de tela da API](../ images / create-api.png)
+    ![Criar captura de tela da API](../images/create-api.png)
 
 </p> </details>
 
