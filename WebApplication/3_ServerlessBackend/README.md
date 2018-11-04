@@ -21,7 +21,7 @@ Use o console do Amazon DynamoDB para criar uma nova tabela do DynamoDB. Chame s
 
 Depois de criar a tabela, observe o ARN para uso na próxima etapa.
 
-<detalhes>
+<details>
 <summary> <strong> Instruções passo a passo (expanda para detalhes) </ strong> </ summary> <p>
 
 1. No AWS Management Console, escolha ** Serviços ** e selecione ** DynamoDB ** em Bancos de dados.
@@ -53,7 +53,7 @@ Use o console do IAM para criar um novo Role. Nomeie-o como "WildRydesLambda" e 
 
 Anexe a diretiva gerenciada chamada `AWSLambdaBasicExecutionRole` a essa função para conceder as permissões necessárias dos Logs do CloudWatch. Além disso, crie uma política embutida personalizada para sua função que permita a ação `ddb: PutItem` para a tabela criada na seção anterior.
 
-<detalhes>
+<details>
 <summary> <strong> Instruções passo a passo (expanda para detalhes) </ strong> </ summary> <p>
 
 1. No AWS Management Console, clique em ** Serviços ** e selecione ** IAM ** na seção Segurança, identidade e conformidade.
@@ -109,7 +109,7 @@ Use o console do AWS Lambda para criar uma nova função do Lambda chamada `Requ
 
 Certifique-se de configurar sua função para usar a função IAM do `WildRydesLambda` criada na seção anterior.
 
-<detalhes>
+<details>
 <summary> <strong> Instruções passo a passo (expanda para detalhes) </ strong> </ summary> <p>
 
 1. Escolha em ** Serviços ** e selecione ** Lambda ** na seção Computação.
