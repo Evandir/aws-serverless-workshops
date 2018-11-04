@@ -1,196 +1,193 @@
-# Module 3: Serverless Service Backend
+# Module 3: Serviço de Backend Serverless
 
-In this module you'll use AWS Lambda and Amazon DynamoDB to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a unicorn be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
+Neste módulo, você usará o AWS Lambda e o Amazon DynamoDB para criar um processo de back-end para lidar com solicitações daa sua aplicação web. A aplicação web que você implantou no primeiro módulo permite que os usuários solicitem que um unicórnio seja enviado para um local de sua escolha. Para atender a essas solicitações, o JavaScript em execução no navegador precisará invocar um serviço em execução na nuvem.
 
-You'll implement a Lambda function that will be invoked each time a user requests a unicorn. The function will select a unicorn from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the unicorn being dispatched.
+Você implementará uma função do Lambda que será invocada toda vez que um usuário solicitar um unicórnio. A função selecionará um unicórnio da frota, registrará a solicitação em uma tabela do DynamoDB e responderá ao aplicativo front-end com detalhes sobre o unicórnio sendo enviado.
 
-![Serverless backend architecture](../images/serverless-backend-architecture.png)
+! [Serverless backend architecture] (../ images / serverless-backend-architecture.png)
 
-The function is invoked from the browser using Amazon API Gateway. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
+A função é chamada a partir do navegador usando o Amazon API Gateway. Você implementará essa conexão no próximo módulo. Para este módulo, você apenas testará sua função isoladamente.
 
-If you want to skip ahead to the next module, you can **launch the stack from [module 4 (RESTful APIs)](../4_RESTfulAPIs)**.
 
-## Implementation Instructions
+## Instruções de Implementação
 
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+Cada uma das seções a seguir fornece uma visão geral da implementação e instruções detalhadas passo a passo. A visão geral deve fornecer um contexto suficiente para você concluir a implementação, caso já esteja familiarizado com o AWS Management Console ou deseje explorar os serviços sem seguir uma explicação passo a passo.
 
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+Se você estiver usando a versão mais recente dos navegadores Chrome, Firefox ou Safari, as instruções passo a passo não serão visíveis até você expandir a seção.
 
-### 1. Create an Amazon DynamoDB Table
+### 1. Crie uma tabela do Amazon DynamoDB
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
+Use o console do Amazon DynamoDB para criar uma nova tabela do DynamoDB. Chame sua tabela `Rides` e dê a ela uma chave de partição chamada` RideId` com o tipo String. O nome da tabela e a chave de partição fazem distinção entre maiúsculas e minúsculas. Certifique-se de usar os IDs exatos fornecidos. Use os padrões para todas as outras configurações.
 
-After you've created the table, note the ARN for use in the next step.
+Depois de criar a tabela, observe o ARN para uso na próxima etapa.
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<detalhes>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </ strong> </ summary> <p>
 
-1. From the AWS Management Console, choose **Services** then select **DynamoDB** under Databases.
+1. No AWS Management Console, escolha ** Serviços ** e selecione ** DynamoDB ** em Bancos de dados.
 
-1. Choose **Create table**.
+1. Escolha ** Criar tabela **.
 
-1. Enter `Rides` for the **Table name**. This field is case sensitive.
+1. Digite `Rides` para o ** nome da tabela **. Este campo diferencia maiúsculas de minúsculas.
 
-1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
+1. Digite `RideId` para a  ** Partition key ** e selecione ** String ** para o tipo de chave. Este campo diferencia maiúsculas de minúsculas.
 
-1. Check the **Use default settings** box and choose **Create**.
+1. Marque a caixa ** Use default settings ** e escolha ** Create **.
 
-    ![Create table screenshot](../images/ddb-create-table.png)
+    ! [Create table screenshot] (../images / ddb-create-table.png)
 
-1. Scroll to the bottom of the Overview section of your new table and note the **ARN**. You will use this in the next section.
+1. Role até a parte inferior da seção Visão geral de sua nova tabela e observe o ** ARN **. Você usará isso na próxima seção.
 
-</p></details>
+</ p> </ details>
 
 
-### 2. Create an IAM Role for Your Lambda function
+### 2. Crie uma função IAM para sua função Lambda
 
-#### Background
+#### Contexto
 
-Every Lambda function has an IAM role associated with it. This role defines what other AWS services the function is allowed to interact with. For the purposes of this workshop, you'll need to create an IAM role that grants your Lambda function permission to write logs to Amazon CloudWatch Logs and access to write items to your DynamoDB table.
+Cada função Lambda tem uma função do IAM associada a ela. Essa função define com quais outros serviços da AWS a função pode interagir. Para os propósitos deste workshop, você precisará criar uma função do IAM que conceda a permissão da função do Lambda para gravar logs no Amazon CloudWatch Logs e acessar itens de gravação na tabela do DynamoDB.
 
-#### High-Level Instructions
+#### Instruções gerais
 
-Use the IAM console to create a new role. Name it `WildRydesLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
+Use o console do IAM para criar um novo Role. Nomeie-o como "WildRydesLambda" e selecione o AWS Lambda para o tipo de função. Você precisará anexar políticas que concedam suas permissões de função para gravar nos logs do Amazon CloudWatch e colocar itens em sua tabela do DynamoDB.
 
-Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to grant the necessary CloudWatch Logs permissions. Also, create a custom inline policy for your role that allows the `ddb:PutItem` action for the table you created in the previous section.
+Anexe a diretiva gerenciada chamada `AWSLambdaBasicExecutionRole` a essa função para conceder as permissões necessárias dos Logs do CloudWatch. Além disso, crie uma política embutida personalizada para sua função que permita a ação `ddb: PutItem` para a tabela criada na seção anterior.
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<detalhes>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </ strong> </ summary> <p>
 
-1. From the AWS Management Console, click on **Services** and then select **IAM** in the Security, Identity & Compliance section.
+1. No AWS Management Console, clique em ** Serviços ** e selecione ** IAM ** na seção Segurança, identidade e conformidade.
 
-1. Select **Roles** in the left navigation bar and then choose **Create new role**.
+1. Selecione ** Funções ** na barra de navegação à esquerda e, em seguida, escolha ** Criar nova função **.
 
-1. Select **Lambda** for the role type from the **AWS service** group, then click **Next: Permissions**
+1. Selecione ** Lambda ** para o tipo de função no grupo ** AWS service ** e clique em ** Next: Permissions **
 
-    **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
+1. Comece a digitar `AWSLambdaBasicExecutionRole` na caixa de texto ** Filter ** e marque a caixa ao lado dessa função.
 
-1. Begin typing `AWSLambdaBasicExecutionRole` in the **Filter** text box and check the box next to that role.
+1. Clique em ** Próximo: Revisar **.
 
-1. Click **Next: Review**.
+1. Digite `WildRydesLambda` para o ** Nome da função **.
 
-1. Enter `WildRydesLambda` for the **Role name**.
+1. Escolha ** Criar papel **.
 
-1. Choose **Create role**.
+1. Digite `WildRydesLambda` na caixa de filtro na página Funções e escolha a função que você acabou de criar.
 
-1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
+1. Na guia Permissões, escolha o link ** Adicionar política in-line ** no canto inferior direito para criar uma nova política in-line.
+    ! [Inline policies screenshot] (../images / inline-policies.png)
 
-1. On the Permissions tab, choose the **Add inline policy** link in the lower right corner to create a new inline policy.
-    ![Inline policies screenshot](../images/inline-policies.png)
+1. Selecione ** Escolher um serviço **.
 
-1. Select **Choose a service**.
+1. Comece a digitar `DynamoDB` na caixa de pesquisa chamada ** Encontrar um serviço ** e selecione ** DynamoDB ** quando ele aparecer.
+    ! [Select policy service] (../images / select-policy-service.png)
 
-1. Begin typing `DynamoDB` into the search box labeled **Find a service** and select **DynamoDB** when it appears.
-    ![Select policy service](../images/select-policy-service.png)
+1. Escolha ** Selecionar ações **.
 
-1. Choose **Select actions**.
+1. Comece a digitar `PutItem` na caixa de pesquisa chamada ** Ações de filtro ** e marque a caixa ao lado de ** PutItem ** quando ele aparecer.
 
-1. Begin typing `PutItem` into the search box labeled **Filter actions** and check the box next to **PutItem** when it appears.
+1. Selecione a seção ** Recursos **.
 
-1. Select the **Resources** section.
+1. Com a opção ** Específico ** selecionada, escolha o link Adicionar ARN na seção ** tabela **.
 
-1. With the **Specific** option selected, choose the Add ARN link in the **table** section.
+1. Cole o ARN da tabela criada na seção anterior no campo ** Especificar ARN para a tabela ** e escolha ** Adicionar **.
 
-1. Paste the ARN of the table you created in the previous section in the **Specify ARN for table** field, and choose **Add**.
+1. Escolha ** Revisar política **.
 
-1. Choose **Review Policy**.
+1. Digite `DynamoDBWriteAccess` para o nome da política e escolha ** Create policy **.
+    ! [Review Policy] (../ images / review-policy.png)
 
-1. Enter `DynamoDBWriteAccess` for the policy name and choose **Create policy**.
-    ![Review Policy](../images/review-policy.png)
+</ p> </ details>
 
-</p></details>
+### 3. Criar uma função do Lambda para lidar com solicitações
 
-### 3. Create a Lambda Function for Handling Requests
+#### Contexto
 
-#### Background
+O AWS Lambda executará seu código em resposta a eventos como uma solicitação HTTP. Nesta etapa, você criará a função principal que processará solicitações de API do aplicativo da Web para despachar um unicórnio. No próximo módulo, você usará o Amazon API Gateway para criar uma API RESTful que exporá um endpoint HTTP que pode ser chamado a partir dos navegadores de seus usuários. Em seguida, você conectará a função Lambda criada nesta etapa a essa API para criar um back-end totalmente funcional para seu aplicativo da web.
 
-AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
+#### Instruções gerais
 
-#### High-Level Instructions
+Use o console do AWS Lambda para criar uma nova função do Lambda chamada `RequestUnicorn` que processará as solicitações da API. Use a implementação de exemplo fornecida [requestUnicorn.js] (requestUnicorn.js) para o seu código de função. Basta copiar e colar desse arquivo no editor do console do AWS Lambda.
 
-Use the AWS Lambda console to create a new Lambda function called `RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
+Certifique-se de configurar sua função para usar a função IAM do `WildRydesLambda` criada na seção anterior.
 
-Make sure to configure your function to use the `WildRydesLambda` IAM role you created in the previous section.
+<detalhes>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </ strong> </ summary> <p>
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+1. Escolha em ** Serviços ** e selecione ** Lambda ** na seção Computação.
 
-1. Choose on **Services** then select **Lambda** in the Compute section.
+1. Clique em ** Criar função **.
 
-1. Click **Create function**.
+1. Mantenha o cartão padrão ** Criar do zero ** selecionado.
 
-1. Keep the default **Author from scratch** card selected.
+1. Digite `RequestUnicorn` no campo ** Nome **.
 
-1. Enter `RequestUnicorn` in the **Name** field.
+1. Selecione ** Node.js 6.10 ** para o ** Runtime **.
 
-1. Select **Node.js 6.10** for the **Runtime**.
+1. Certifique-se de que "Escolher uma função existente" esteja selecionado na lista suspensa ** Função **.
 
-1. Ensure `Choose an existing role` is selected from the **Role** dropdown.
+1. Selecione `WildRydesLambda` na lista suspensa ** Existing Role **.
+    ! [Create lambda function screenshot] (../images / create-lambda-function.png)
 
-1. Select `WildRydesLambda` from the **Existing Role** dropdown.
-    ![Create Lambda function screenshot](../images/create-lambda-function.png)
+1. Clique em ** Criar função **.
 
-1. Click on **Create function**.
+1. Role para baixo até a seção ** Código de função ** e substitua o código existente no editor de código ** index.js ** pelo conteúdo de [requestUnicorn.js] (requestUnicorn.js).
+    ! [Create lambda function screenshot] (../ images / create-lambda-function-code.png)
 
-1. Scroll down to the **Function code** section and replace the existing code in the **index.js** code editor with the contents of [requestUnicorn.js](requestUnicorn.js).
-    ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
+1. Clique em ** "Salvar" ** no canto superior direito da página.
 
-1. Click **"Save"** in the upper right corner of the page.
+</ p> </ details>
 
-</p></details>
+## Validação de Implementação
 
-## Implementation Validation
+Para este módulo, você testará a função criada usando o console do AWS Lambda. No próximo módulo, você adicionará uma API REST com o API Gateway para poder invocar sua função a partir da aplicação web que você implantou no primeiro módulo.
 
-For this module you will test the function that you built using the AWS Lambda console. In the next module you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
+1. Na tela de edição principal da sua função, selecione ** Configurar evento de teste ** no menu suspenso ** Selecionar um evento de teste ... **.
+    ! [Configure test event] (../images / configure-test-event.png)
 
-1. From the main edit screen for your function, select **Configure test event** from the the **Select a test event...** dropdown.
-    ![Configure test event](../images/configure-test-event.png)
+1. Mantenha ** Criar novo evento de teste ** selecionado.
 
-1. Keep **Create new test event** selected.
+1. Digite `TestRequestEvent` no campo ** Nome do evento **
 
-1. Enter `TestRequestEvent` in the **Event name** field
+1. Copie e cole o seguinte evento de teste no editor:
 
-1. Copy and paste the following test event into the editor:
-
-    ```JSON
+    `` `JSON
     {
-        "path": "/ride",
+        "path": "/ ride",
         "httpMethod": "POST",
         "headers": {
-            "Accept": "*/*",
-            "Authorization": "eyJraWQiOiJLTzRVMWZs",
+            "Accept": "* / *",
+            "AAuthorization": "eyJraWQiOiJLTzRVMWZs",
             "content-type": "application/json; charset=UTF-8"
-        },
+        }
         "queryStringParameters": null,
         "pathParameters": null,
         "requestContext": {
             "authorizer": {
                 "claims": {
-                    "cognito:username": "the_username"
+                    "cognito: username": "the_username"
                 }
             }
-        },
-        "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
+        }
+        "body": "{\" PickupLocation \ ": {\" Latitude \ ": 47.6174755835663, \" Longitude \ ": - 122.28837066650185}}"
     }
-    ```
+    `` `
 
-    ![Configure test event](../images/configure-test-event-2.png)
+    ! [Configure test event] (../images / configure-test-event-2.png)
 
-1. Click **Create**.
+1. Clique em ** Criar **.
 
-1. On the main function edit screen click **Test** with `TestRequestEvent` selected in the dropdown.   
+1. Na tela de edição da função principal, clique em ** Test ** com `TestRequestEvent` selecionado no menu suspenso.
 
-1. Scroll to the top of the page and expand the **Details** section of the **Execution result** section.
+1. Role para o topo da página e expanda a seção ** Detalhes ** da seção ** Resultado da execução **.
 
-1. Verify that the execution succeeded and that the function result looks like the following:
-```JSON
+1. Verifique se a execução foi bem-sucedida e se o resultado da função é semelhante ao seguinte:
+`` `JSON
 {
     "statusCode": 201,
-    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"Eta\":\"30 seconds\"}",
+    "body": "{\" RideId \ ": \" SvLnijIAtg6inAFUBRT + Fg == \ ", \" Unicorn \ ": {\" Name \ ": \" Rocinante \ ", \" Color \ ": \" Yellow \ ", \" Gender \ ": \" Female \ "}, \" Eta \ ": \" 30 seconds \ "}",
     "headers": {
         "Access-Control-Allow-Origin": "*"
     }
 }
-```
+`` `
 
-After you have successfully tested your new function using the Lambda console, you can move on to the next module, [RESTful APIs](../4_RESTfulAPIs).
+Depois de ter testado com sucesso sua nova função usando o console do Lambda, você pode passar para o próximo módulo, [RESTful APIs] (../ 4_RESTfulAPIs).
