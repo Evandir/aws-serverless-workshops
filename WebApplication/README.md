@@ -1,38 +1,38 @@
-# Serverless Web Application Workshop
+# Workshop Serverless Web Application 
 
-In this workshop you'll deploy a simple web application that enables users to request unicorn rides from the [Wild Rydes](http://www.wildrydes.com/) fleet. The application will present users with an HTML based user interface for indicating the location where they would like to be picked up and will interface on the backend with a RESTful web service to submit the request and dispatch a nearby unicorn. The application will also provide facilities for users to register with the service and log in before requesting rides.
+Neste workshop, você implantará uma aplicação Web simples que permite aos usuários solicitar passeios de unicórnio [Wild Rydes] (http://www.wildrydes.com/). A aplicação apresentará aos usuários uma interface de usuário baseada em HTML para indicar o local onde eles gostariam de retirar e fará a interface no back-end com um serviço Web RESTful para enviar a solicitação e despachar um unicórnio próximo. A aplicação também fornecerá recursos para que os usuários se registrem no serviço e efetuem login antes de solicitar passeios.
 
-The application architecture uses [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon API Gateway](https://aws.amazon.com/api-gateway/), [Amazon S3](https://aws.amazon.com/s3/), [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), and [Amazon Cognito](https://aws.amazon.com/cognito/). S3 hosts static web resources including HTML, CSS, JavaScript, and image files which are loaded in the user's browser. JavaScript executed in the browser sends and receives data from a public backend API built using Lambda and API Gateway. Amazon Cognito provides user management and authentication functions to secure the backend API. Finally, DynamoDB provides a  persistence layer where data can be stored by the API's Lambda function.
+A arquitetura da aaplicação usa o [AWS Lambda] (https://aws.amazon.com/lambda/), [Amazon API Gateway] (https://aws.amazon.com/api-gateway/), [Amazon S3] ( https://aws.amazon.com/s3/), [Amazon DynamoDB] e https://aws.amazon.com/dynamodb/ /). O S3 hospeda recursos da Web estáticos, incluindo HTML, CSS, JavaScript e arquivos de imagem que são carregados no navegador do usuário. O JavaScript executado no navegador envia e recebe dados de uma API pública de back-end construída usando o Lambda e o API Gateway. O Amazon Cognito fornece funções de gerenciamento e autenticação de usuários para proteger a API de back-end. Finalmente, o DynamoDB fornece uma camada de persistência onde os dados podem ser armazenados pela função Lambda da API.
 
-See the diagram below for a depiction of the complete architecture.
+Veja o diagrama abaixo para uma representação da arquitetura completa.
 
 ![Wild Rydes Web Application Architecture](images/wildrydes-complete-architecture.png)
 
-If you'd like to jump in and get started please visit the [Static Web hosting](1_StaticWebHosting) module page to begin the workshop.
+Se você quiser entrar e começar, visite a página do módulo [Static Web hosting] (1_StaticWebHosting) para iniciar o workshop.
 
-## Prerequisites
+## Pré-requisitos
 
-### AWS Account
+### Conta AWS
 
-In order to complete this workshop you'll need an AWS Account with access to create AWS IAM, S3, DynamoDB, Lambda, API Gateway and Cognito resources. The code and instructions in this workshop assume only one student is using a given AWS account at a time. If you try sharing an account with another student, you'll run into naming conflicts for certain resources. You can work around these by appending a unique suffix to the resources that fail to create due to conflicts, but the instructions do not provide details on the changes required to make this work.
+Para concluir este workshop, você precisará de uma conta da AWS com acesso para criar recursos do AWS IAM, S3, DynamoDB, Lambda, Gateway de API e Cognito. O código e as instruções deste workshop supõem que apenas um aluno esteja usando uma determinada conta da AWS por vez. Se você tentar compartilhar uma conta com outro aluno, encontrará conflitos de nomenclatura para determinados recursos. Você pode contornar isso anexando um único sufixo aos recursos que não foram criados devido a conflitos, mas as instruções não fornecem detalhes sobre as alterações necessárias para que isso funcione.
 
-All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details.
+Todos os recursos que você lançará como parte deste workshop estarão qualificados para o nível gratuito da AWS se sua conta tiver menos de 12 meses. Consulte a [página do nível gratuito da AWS] (https://aws.amazon.com/free/) para obter mais detalhes.
 
 ### Browser
 
-We recommend you use the latest version of Chrome to complete this workshop.
+Recomendamos que você use a versão mais recente do Chrome para concluir este workshop.
 
-### Text Editor
+### Editor de Texto
 
-You will need a local text editor for making minor updates to configuration files.
+Você precisará de um editor de texto local para fazer pequenas atualizações nos arquivos de configuração.
 
-## Modules
+## Módulos
 
-This workshop is broken up into multiple modules. You must complete each module before proceeding to the next, however, modules 1 and 2 have AWS CloudFormation templates available that you can use to launch the necessary resources without manually creating them yourself if you'd like to skip ahead.
+Este workshop está dividido em vários módulos. Você deve concluir cada módulo antes de prosseguir para o próximo, no entanto, os módulos 1 e 2 têm modelos disponíveis do AWS CloudFormation que você pode usar para iniciar os recursos necessários sem criá-los manualmente, caso deseje pular.
 
 1. [Static Web hosting](1_StaticWebHosting)
 2. [User Management](2_UserManagement)
 3. [Serverless Backend](3_ServerlessBackend)
 4. [RESTful APIs](4_RESTfulAPIs)
 
-After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).
+Depois de concluir o workshop, você pode excluir todos os recursos criados seguindo o [cleanup guide] (9_CleanUp).
