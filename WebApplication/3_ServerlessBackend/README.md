@@ -150,7 +150,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 
 1. Copie e cole o seguinte evento de teste no editor:
 
-    `` `JSON
+    ```JSON
     {
         "path": "/ ride",
         "httpMethod": "POST",
@@ -170,7 +170,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
         }
         "body": "{\" PickupLocation \ ": {\" Latitude \ ": 47.6174755835663, \" Longitude \ ": - 122.28837066650185}}"
     }
-    `` `
+    ```
 
     ![Configure test event](../images/configure-test-event-2.png)
 
@@ -181,7 +181,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 1. Role para o topo da página e expanda a seção ** Detalhes ** da seção ** Resultado da execução **.
 
 1. Verifique se a execução foi bem-sucedida e se o resultado da função é semelhante ao seguinte:
-`` `JSON
+```JSON
 {
     "statusCode": 201,
     "body": "{\" RideId \ ": \" SvLnijIAtg6inAFUBRT + Fg == \ ", \" Unicorn \ ": {\" Name \ ": \" Rocinante \ ", \" Color \ ": \" Yellow \ ", \" Gender \ ": \" Female \ "}, \" Eta \ ": \" 30 seconds \ "}",
@@ -189,6 +189,6 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
         "Access-Control-Allow-Origin": "*"
     }
 }
-`` `
+```
 
 Depois de ter testado com sucesso sua nova função usando o console do Lambda, você pode passar para o próximo módulo, ![RESTful APIs](../4_RESTfulAPIs).
