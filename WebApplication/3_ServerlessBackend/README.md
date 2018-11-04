@@ -1,4 +1,4 @@
-# Module 3: Serviço de Backend Serverless
+# Módulo 3: Serviço de Backend Serverless
 
 Neste módulo, você usará o AWS Lambda e o Amazon DynamoDB para criar um processo de back-end para lidar com solicitações daa sua aplicação web. A aplicação web que você implantou no primeiro módulo permite que os usuários solicitem que um unicórnio seja enviado para um local de sua escolha. Para atender a essas solicitações, o JavaScript em execução no navegador precisará invocar um serviço em execução na nuvem.
 
@@ -191,4 +191,4 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 }
 `` `
 
-Depois de ter testado com sucesso sua nova função usando o console do Lambda, você pode passar para o próximo módulo, [RESTful APIs] (../ 4_RESTfulAPIs).
+Depois de ter testado com sucesso sua nova função usando o console do Lambda, você pode passar para o próximo módulo, ![RESTful APIs](../4_RESTfulAPIs).
