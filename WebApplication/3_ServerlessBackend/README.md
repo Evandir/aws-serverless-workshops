@@ -4,7 +4,7 @@ Neste módulo, você usará o AWS Lambda e o Amazon DynamoDB para criar um proce
 
 Você implementará uma função do Lambda que será invocada toda vez que um usuário solicitar um unicórnio. A função selecionará um unicórnio da frota, registrará a solicitação em uma tabela do DynamoDB e responderá ao aplicativo front-end com detalhes sobre o unicórnio sendo enviado.
 
-! [Serverless backend architecture] (../images/serverless-backend-architecture.png)
+![Serverless backend architecture](../images/serverless-backend-architecture.png)
 
 A função é chamada a partir do navegador usando o Amazon API Gateway. Você implementará essa conexão no próximo módulo. Para este módulo, você apenas testará sua função isoladamente.
 
@@ -35,7 +35,7 @@ Depois de criar a tabela, observe o ARN para uso na próxima etapa.
 
 1. Marque a caixa ** Use default settings ** e escolha ** Create **.
 
-    ! [Create table screenshot] (../images/ddb-create-table.png)
+    ![Create table screenshot](../images/ddb-create-table.png)
 
 1. Role até a parte inferior da seção Visão geral de sua nova tabela e observe o ** ARN **. Você usará isso na próxima seção.
 
@@ -74,12 +74,12 @@ Anexe a diretiva gerenciada chamada `AWSLambdaBasicExecutionRole` a essa funçã
 1. Digite `WildRydesLambda` na caixa de filtro na página Funções e escolha a função que você acabou de criar.
 
 1. Na guia Permissões, escolha o link ** Adicionar política in-line ** no canto inferior direito para criar uma nova política in-line.
-    ! [Inline policies screenshot] (../images/inline-policies.png)
+    ![Inline policies screenshot](../images/inline-policies.png)
 
 1. Selecione ** Escolher um serviço **.
 
 1. Comece a digitar `DynamoDB` na caixa de pesquisa chamada ** Encontrar um serviço ** e selecione ** DynamoDB ** quando ele aparecer.
-    ! [Select policy service] (../images/select-policy-service.png)
+    ![Select policy service](../images/select-policy-service.png)
 
 1. Escolha ** Selecionar ações **.
 
@@ -94,7 +94,7 @@ Anexe a diretiva gerenciada chamada `AWSLambdaBasicExecutionRole` a essa funçã
 1. Escolha ** Revisar política **.
 
 1. Digite `DynamoDBWriteAccess` para o nome da política e escolha ** Create policy **.
-    ! [Review Policy] (../images/review-policy.png)
+    ![Review Policy](../images/review-policy.png)
 
 </p> </details>
 
@@ -126,12 +126,12 @@ Certifique-se de configurar sua função para usar a função IAM do `WildRydesL
 1. Certifique-se de que "Escolher uma função existente" esteja selecionado na lista suspensa ** Função **.
 
 1. Selecione `WildRydesLambda` na lista suspensa ** Existing Role **.
-    ! [Create lambda function screenshot] (../images/create-lambda-function.png)
+    ![Create lambda function screenshot](../images/create-lambda-function.png)
 
 1. Clique em ** Criar função **.
 
 1. Role para baixo até a seção ** Código de função ** e substitua o código existente no editor de código ** index.js ** pelo conteúdo de [requestUnicorn.js] (requestUnicorn.js).
-    ! [Create lambda function screenshot] (../images/create-lambda-function-code.png)
+    ![Create lambda function screenshot](../images/create-lambda-function-code.png)
 
 1. Clique em ** "Salvar" ** no canto superior direito da página.
 
@@ -142,7 +142,7 @@ Certifique-se de configurar sua função para usar a função IAM do `WildRydesL
 Para este módulo, você testará a função criada usando o console do AWS Lambda. No próximo módulo, você adicionará uma API REST com o API Gateway para poder invocar sua função a partir da aplicação web que você implantou no primeiro módulo.
 
 1. Na tela de edição principal da sua função, selecione ** Configurar evento de teste ** no menu suspenso ** Selecionar um evento de teste ... **.
-    ! [Configure test event] (../images/configure-test-event.png)
+    ![Configure test event](../images/configure-test-event.png)
 
 1. Mantenha ** Criar novo evento de teste ** selecionado.
 
@@ -172,7 +172,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
     }
     `` `
 
-    ! [Configure test event] (../images/configure-test-event-2.png)
+    ![Configure test event](../images/configure-test-event-2.png)
 
 1. Clique em ** Criar **.
 
