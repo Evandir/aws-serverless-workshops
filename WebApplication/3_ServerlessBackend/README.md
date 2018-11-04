@@ -152,23 +152,23 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 
     ```JSON
     {
-        "path": "/ride",
-        "httpMethod": "POST",
-        "headers": {
-            "Accept": "*/*",
-            "AAuthorization": "eyJraWQiOiJLTzRVMWZs",
-            "content-type": "application/json; charset=UTF-8"
-        }
-        "queryStringParameters": null,
-        "pathParameters": null,
-        "requestContext": {
-            "authorizer": {
-                "claims": {
-                    "cognito: username": "the_username"
-                }
+    "path": "/ride",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "Authorization": "eyJraWQiOiJLTzRVMWZs",
+        "content-type": "application/json; charset=UTF-8"
+    },
+    "queryStringParameters": null,
+    "pathParameters": null,
+    "requestContext": {
+        "authorizer": {
+            "claims": {
+                "cognito:username": "the_username"
             }
         }
-        "body":"{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
+    },
+    "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
     }
     ```
 
@@ -184,7 +184,7 @@ Para este módulo, você testará a função criada usando o console do AWS Lamb
 ```JSON
 {
     "statusCode": 201,
-    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT + Fg == \", \" Unicorn \ ": {\" Name \ ": \" Rocinante \ ", \" Color \ ": \" Yellow \ ", \" Gender \ ": \" Female \ "}, \" Eta \ ": \" 30 seconds \ "}",
+    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"Eta\":\"30 seconds\"}",
     "headers": {
         "Access-Control-Allow-Origin": "*"
     }
