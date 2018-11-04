@@ -28,10 +28,10 @@ Você precisará de um editor de texto local para fazer pequenas atualizações 
 
 ## Módulos
 
-Este workshop está dividido em vários módulos. Você deve concluir cada módulo antes de prosseguir para o próximo, no entanto, os módulos 1 e 2 têm modelos disponíveis do AWS CloudFormation que você pode usar para iniciar os recursos necessários sem criá-los manualmente, caso deseje pular.
+Este workshop está dividido em vários módulos. Você deve concluir cada módulo antes de prosseguir para o próximo.
 
-1. [Static Web hosting](1_StaticWebHosting)
-2. [User Management](2_UserManagement)
+1. [Website estático](1_StaticWebHosting)
+2. [Autenticação de usuários](2_UserManagement)
 3. [Serverless Backend](3_ServerlessBackend)
 4. [RESTful APIs](4_RESTfulAPIs)
 
