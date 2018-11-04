@@ -1,256 +1,216 @@
-# Module 4: RESTful APIs with AWS Lambda and Amazon API Gateway
+# Módulo 4: APIs RESTful com o AWS Lambda e o Amazon API Gateway
 
-In this module you'll use API Gateway to expose the Lambda function you built in the previous module as a RESTful API. This API will be accessible on the public Internet. It will be secured using the Amazon Cognito user pool you created in the previous module. Using this configuration you will then turn your statically hosted website into a dynamic web application by adding client-side JavaScript that makes AJAX calls to the exposed APIs.
+Neste módulo, você usará o API Gateway para expor a função do Lambda construída no módulo anterior como uma API RESTful. Esta API estará acessível na Internet pública. Ele será protegido usando o pool de usuários do Amazon Cognito que você criou no módulo anterior. Usando essa configuração, você transformará seu site hospedado estaticamente em um aplicativo dinâmico da Web, adicionando o JavaScript do lado do cliente que faz chamadas AJAX para as APIs expostas.
 
-![Dynamic web app architecture](../images/restful-api-architecture.png)
+![Dynamic web app architecture](../imagens/restful-api-architecture.png)
 
-The diagram above shows how the API Gateway component you will build in this module integrates with the existing components you built previously. The grayed out items are pieces you have already implemented in previous steps.
+O diagrama acima mostra como o componente do API Gateway que você criará neste módulo se integra aos componentes existentes que você criou anteriormente. Os itens em cinza são peças que você já implementou nas etapas anteriores.
 
-The static website you deployed in the first module already has a page configured to interact with the API you'll build in this module. The page at /ride.html has a simple map-based interface for requesting a unicorn ride. After authenticating using the /signin.html page, your users will be able to select their pickup location by clicking a point on the map and then requesting a ride by choosing the "Request Unicorn" button in the upper right corner.
+O site estático que você implantou no primeiro módulo já tem uma página configurada para interagir com a API que você criará neste módulo. A página em /ride.html possui uma interface simples baseada em mapas para solicitar um passeio de unicórnio. Depois de autenticar usando a página /signin.html, seus usuários poderão selecionar seu local de retirada clicando em um ponto no mapa e, em seguida, solicitando uma carona escolhendo o botão "Solicitar unicórnio" no canto superior direito.
 
-This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
+Este módulo enfocará as etapas necessárias para criar os componentes de nuvem da API, mas se você estiver interessado em saber como funciona o código do navegador que chama essa API, inspecione o [ride.js] (../ 1_StaticWebHosting / website /js/ride.js) arquivo do site. Nesse caso, o aplicativo usa o método [ajax ()] do jQuery (https://api.jquery.com/jQuery.ajax/) para fazer a solicitação remota.
 
-If you want to skip ahead to the next module, you can launch one of these AWS CloudFormation templates in the Region of your choice in order to build the necessary resources automatically.
 
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Module 4 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-US East (Ohio) | [![Launch Module 4 in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-US West (Oregon) | [![Launch Module 4 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-EU (Frankfurt) | [![Launch Module 4 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-EU (Ireland) | [![Launch Module 4 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-EU (London) | [![Launch Module 4 in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-Asia Pacific (Tokyo) | [![Launch Module 4 in ap-northeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-Asia Pacific (Seoul) | [![Launch Module 4 in ap-northeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-Asia Pacific (Sydney) | [![Launch Module 4 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
-Asia Pacific (Mumbai) | [![Launch Module 4 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+## Instruções de Implementação
+
+Cada uma das seções a seguir fornece uma visão geral da implementação e instruções detalhadas e passo a passo. A visão geral deve fornecer um contexto suficiente para você concluir a implementação, caso já esteja familiarizado com o AWS Management Console ou deseje explorar os serviços sem seguir uma explicação passo a passo.
+
+Se você estiver usando a versão mais recente dos navegadores Chrome, Firefox ou Safari, as instruções passo a passo não serão visíveis até você expandir a seção.
+
+### 1. Crie uma nova API REST
+Use o console do Amazon API Gateway para criar uma nova API.
 
 <details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
 
-1. Click the **Launch Stack** link above for the region of your choice.
+1. No AWS Management Console, clique em ** Services ** e selecione ** API Gateway ** em Networking & Content Delivery.
 
-1. Click **Next** on the Select Template page.
+1. Escolha ** Criar API **.
 
-1. Provide the name of your website bucket from module 1 for the  **Website Bucket Name** (e.g. `wildrydes-yourname`) and choose **Next**.
+1. Selecione ** Nova API ** e insira "WildRydes" para o ** Nome da API **.
 
-    **Note:** You must specify the same bucket name you used in the previous module. If you provide a bucket name that does not exist or that you do not have write access to, the CloudFormation stack will fail during creation.
+1. Mantenha 'Edge optimized' selecionado no menu suspenso ** Endpoint Type **.
+    *** Nota ***: As margens otimizadas são melhores para serviços públicos acessados ​​pela Internet. Os terminais regionais geralmente são usados ​​para APIs acessadas principalmente na mesma região da AWS.
 
-1. Provide the ARN for the User Pool we created in module 2. You can find the User Pool ARN in the [Amazon Cognito console](https://console.aws.amazon.com/cognito/users/).
+1. Escolha ** Criar API **
 
-1. On the Options page, leave all the defaults and click **Next**.
+    ![Criar captura de tela da API](../ images / create-api.png)
 
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
+</p> </details>
 
-    This template uses a custom resource to update the `/js/config.js` file with the new API endpoint URL
 
-1. Wait for the `wildrydes-webapp-4` stack to reach a status of `CREATE_COMPLETE`.
+### 2. Criar um autorizador de pools de usuários do Cognito
 
-1. Verify the Wild Rydes home page is loading properly and try to request a ride.
+#### Fundo
+O Amazon API Gateway pode usar os tokens JWT retornados pelos pools de usuários do Cognito para autenticar chamadas de API. Nesta etapa, você configurará um autorizador para sua API para usar o pool de usuários que você criou no [módulo 2] (../ 2_UserManagement).
 
-</p></details>
-
-## Implementation Instructions
-
-Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
-
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
-
-### 1. Create a New REST API
-Use the Amazon API Gateway console to create a new API.
+#### Instruções de alto nível
+No console do Amazon API Gateway, crie um novo autorizador do pool de usuários do Cognito para sua API. Configure-o com os detalhes do pool de usuários que você criou no módulo anterior. Você pode testar a configuração no console copiando e colando o token de autenticação apresentado a você depois de efetuar login através da página /signin.html do seu site atual.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Networking & Content Delivery.
+1. Sob sua API recém-criada, escolha ** Autorizadores **.
 
-1. Choose **Create API**.
+1. Escolha ** Criar novo autorizador **.
 
-1. Select **New API** and enter `WildRydes` for the **API Name**.
+1. Digite "WildRydes" para o nome do Autorizador.
 
-1. Keep `Edge optimized` selected in the **Endpoint Type** dropdown.
-    ***Note***: Edge optimized are best for public services being accessed from the Internet. Regional endpoints are typically used for APIs that are accessed primarily from within the same AWS Region.
+1. Selecione ** Cognito ** para o tipo.
 
-1. Choose **Create API**
+1. No menu suspenso Região, em ** Conjunto de usuários do Cognito **, selecione a Região na qual você criou seu conjunto de usuários do Cognito no módulo 2 (por padrão, a região atual deve ser selecionada).
 
-    ![Create API screenshot](../images/create-api.png)
+1. Digite `WildRydes` (ou o nome que você forneceu ao seu pool de usuários) na entrada ** do Cognito User Pool **.
 
-</p></details>
+1. Digite "Autorização" para a ** Fonte do Token **.
 
+1. Escolha ** Criar **.
 
-### 2. Create a Cognito User Pools Authorizer
+    ![Criar captura de tela do autorizador do pool de usuários](../images/create-user-pool-authorizer.png)
 
-#### Background
-Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In this step you'll configure an authorizer for your API to use the user pool you created in [module 2](../2_UserManagement).
+#### Verifique a configuração do seu autorizador
 
-#### High-Level Instructions
-In the Amazon API Gateway console, create a new Cognito user pool authorizer for your API. Configure it with the details of the user pool that you created in the previous module. You can test the configuration in the console by copying and pasting the auth token presented to you after you log in via the /signin.html page of your current website.
+1. Abra uma nova aba do navegador e visite `/ ride.html` no domínio do seu site.
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+1. Se você for redirecionado para a página de entrada, entre com o usuário que você criou no último módulo. Você será redirecionado de volta para `/ ride.html`.
 
-1. Under your newly created API, choose **Authorizers**.
+1. Copie o token de autenticação da notificação no `/ ride.html`,
 
-1. Chose **Create New Authorizer**.
+1. Volte para a guia anterior onde você acabou de criar o Autorizador
 
-1. Enter `WildRydes` for the Authorizer name.
+1. Clique em ** Teste ** na parte inferior do cartão para o autorizador.
 
-1. Select **Cognito** for the type.
+1. Cole o token de autenticação no campo ** Token de autorização ** na caixa de diálogo pop-up.
 
-1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in module 2 (by default the current region should be selected).
+    ![Captura de tela do Authorizer](../images/apigateway-test-authorizer.png)
 
-1. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
+1. Clique no botão ** Test ** e verifique se o código de resposta é 200 e se você vê as declarações do usuário exibidas.
 
-1. Enter `Authorization` for the **Token Source**.
+</p> </details>
 
-1. Choose **Create**.
-
-    ![Create user pool authorizer screenshot](../images/create-user-pool-authorizer.png)
-
-#### Verify your authorizer configuration
-
-1. Open a new browser tab and visit `/ride.html` under your website's domain.
-
-1. If you are redirected to the sign-in page, sign in with the user you created in the last module. You will be redirected back to `/ride.html`.
-
-1. Copy the auth token from the notification on the `/ride.html`,
-
-1. Go back to previous tab where you have just finished creating the Authorizer
-
-1. Click **Test** at the bottom of the card for the authorizer.
-
-1. Paste the auth token into the **Authorization Token** field in the popup dialog.
-
-    ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
-
-1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed.
-
-</p></details>
-
-### 3. Create a new resource and method
-Create a new resource called /ride within your API. Then create a POST method for that resource and configure it to use a Lambda proxy integration backed by the RequestUnicorn function you created in the first step of this module.
+### 3. Crie um novo recurso e método
+Crie um novo recurso chamado / ride na sua API. Em seguida, crie um método POST para esse recurso e configure-o para usar uma integração de proxy do Lambda respaldada pela função RequestUnicorn criada na primeira etapa deste módulo.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
 
-1. In the left nav, click on **Resources** under your WildRydes API.
+1. Na nav esquerda, clique em ** Recursos ** sob sua API WildRydes.
 
-1. From the **Actions** dropdown select **Create Resource**.
+1. Na lista suspensa ** Ações **, selecione ** Criar recurso **.
 
-1. Enter `ride` as the **Resource Name**.
+1. Digite `ride` como o ** Nome do Recurso **.
 
-1. Ensure the **Resource Path** is set to `ride`.
+1. Assegure-se de que o ** Caminho do Recurso ** esteja configurado para `ride`.
 
-1. Select **Enable API Gateway CORS** for the resource.
+1. Selecione ** Ativar o CORS do Gateway de API ** para o recurso.
 
-1. Click **Create Resource**.
+1. Clique em ** Criar Recurso **.
 
-    ![Create resource screenshot](../images/create-resource.png)
+    ![Criar captura de tela do recurso](../images/create-resource.png)
 
-1. With the newly created `/ride` resource selected, from the **Action** dropdown select **Create Method**.
+1. Com o recém-criado recurso `/ ride` selecionado, no menu suspenso ** Ação **, selecione ** Criar Método **.
 
-1. Select `POST` from the new dropdown that appears, then **click the checkmark**.
+1. Selecione `POST` na nova lista suspensa que aparece, depois ** clique na marca de seleção **.
 
-    ![Create method screenshot](../images/create-method.png)
+    ![Criar captura de tela do método](../images/create-method.png)
 
-1. Select **Lambda Function** for the integration type.
+1. Selecione ** Função Lambda ** para o tipo de integração.
 
-1. Check the box for **Use Lambda Proxy integration**.
+1. Marque a caixa para ** Usar integração do Lambda Proxy **.
 
-1. Select the Region you are using for **Lambda Region**.
+1. Selecione a região que você está usando para a ** Região Lambda **.
 
-1. Enter the name of the function you created in the previous module, `RequestUnicorn`, for **Lambda Function**.
+1. Digite o nome da função que você criou no módulo anterior, `RequestUnicorn`, para ** Função Lambda **.
 
-1. Choose **Save**. Please note, if you get an error that you function does not exist, check that the region you selected matches the one you used in the previous module.
+1. Escolha ** Salvar **. Por favor, note que se você encontrar um erro que sua função não existe, verifique se a região que você selecionou corresponde àquela que você usou no módulo anterior.
 
-    ![API method integration screenshot](../images/api-integration-setup.png)
+    ![Captura de tela de integração do método API](../images/api-integration-setup.png)
 
-1. When prompted to give Amazon API Gateway permission to invoke your function, choose **OK**.
+1. Quando solicitado a conceder ao Amazon API Gateway permissão para invocar sua função, escolha ** OK **.
 
-1. Choose on the **Method Request** card.
+1. Escolha no cartão ** Pedido de Método **.
 
-1. Choose the pencil icon next to **Authorization**.
+1. Escolha o ícone de lápis ao lado de ** Autorização **.
 
-1. Select the WildRydes Cognito user pool authorizer from the drop-down list, and click the checkmark icon.
+1. Selecione o autorizador do pool de usuários do WildRydes Cognito na lista suspensa e clique no ícone de marca de seleção.
 
-    ![API authorizer configuration screenshot](../images/api-authorizer.png)
+    ![Captura de tela da configuração do autorizador da API](../images/api-authorizer.png)
 
-</p></details>
+</p> </details>
 
-### 4. Deploy Your API
-From the Amazon API Gateway console, choose Actions, Deploy API. You'll be prompted to create a new stage. You can use prod for the stage name.
-
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-
-1. In the **Actions** drop-down list select **Deploy API**.
-
-1. Select **[New Stage]** in the **Deployment stage** drop-down list.
-
-1. Enter `prod` for the **Stage Name**.
-
-1. Choose **Deploy**.
-
-1. Note the **Invoke URL**. You will use it in the next section.
-
-</p></details>
-
-### 5. Update the Website Config
-Update the /js/config.js file in your website deployment to include the invoke URL of the stage you just created. You should copy the invoke URL directly from the top of the stage editor page on the Amazon API Gateway console and paste it into the \_config.api.invokeUrl key of your sites /js/config.js file. Make sure when you update the config file it still contains the updates you made in the previous module for your Cognito user pool.
+### 4. Implemente sua API
+No console do Amazon API Gateway, escolha Ações, Implantar API. Você será solicitado a criar um novo estágio. Você pode usar prod para o nome artístico.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
 
-If you completed module 2 manually, you can edit the `config.js` file you have saved locally. If you used the AWS CloudFormation template, you must first download the `config.js` file from your S3 bucket. To do so, visit `/js/config.js` under the base URL for your website and choose **File**, then choose **Save Page As** from your browser.
+1. Na lista suspensa ** Ações **, selecione ** Implantar API **.
 
-1. Open the config.js file in a text editor.
+1. Selecione ** [New Stage] ** na lista suspensa ** Implantação **.
 
-1. Update the **invokeUrl** setting under the **api** key in the config.js file. Set the value to the **Invoke URL** for the deployment stage your created in the previous section.
+1. Digite `prod` para o ** Stage Name **.
 
-    An example of a complete `config.js` file is included below. Note, the actual values in your file will be different.
+1. Escolha ** Deploy **.
 
-    ```JavaScript
+1. Observe o ** Invocar URL **. Você irá usá-lo na próxima seção.
+
+</p> </details>
+
+### 5. Atualize o Config do site
+Atualize o arquivo /js/config.js na implantação do seu site para incluir o URL de invocação do estágio que você acabou de criar. Você deve copiar o URL de chamada diretamente da parte superior da página do editor de palco no console do Amazon API Gateway e colá-lo na chave \ _config.api.invokeUrl do arquivo /js/config.js de seus sites. Certifique-se de que, ao atualizar o arquivo de configuração, ele ainda contenha as atualizações feitas no módulo anterior para o conjunto de usuários do Cognito.
+
+<details>
+<summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
+
+Se você completou o módulo 2 manualmente, você pode editar o arquivo `config.js` que você salvou localmente. Se você usou o modelo do AWS CloudFormation, primeiro baixe o arquivo `config.js` do seu bucket do S3. Para fazer isso, visite `/ js / config.js` sob o URL base do seu site, escolha ** Arquivo ** e escolha ** Salvar Página Como ** em seu navegador.
+
+1. Abra o arquivo config.js em um editor de texto.
+
+1. Atualize a configuração ** invokeUrl ** sob a chave ** api ** no arquivo config.js. Defina o valor para ** Invocar URL ** para o estágio de implantação criado na seção anterior.
+
+    Um exemplo de um arquivo `config.js` completo está incluído abaixo. Note que os valores reais em seu arquivo serão diferentes.
+
+    `` `JavaScript
     window._config = {
         cognito: {
-            userPoolId: 'us-west-2_uXboG5pAb', // e.g. us-east-2_uXboG5pAb
-            userPoolClientId: '25ddkmj4v6hfsfvruhpfi7n4hv', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
-            region: 'us-west-2' // e.g. us-east-2
-        },
+            userPoolId: 'us-west-2_uXboG5pAb', // por exemplo us-east-2_uXboG5pAb
+            userPoolClientId: '25ddkmj4v6hfsfvruhpfi7n4hv', // por exemplo 25ddkmj4v6hfsfvruhpfi7n4hv
+            região: 'us-west-2' // por exemplo us-east-2
+        }
         api: {
-            invokeUrl: 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod' // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod,
+            invokeUrl: 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod' // por exemplo https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod,
         }
     };
-    ```
+    `` `
 
-1. Save your changes locally.
+1. Salve suas alterações localmente.
 
-1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
+1. No AWS Management Console, escolha ** Serviços ** e selecione ** S3 ** em Armazenamento.
 
-1. Choose your website bucket and then browse to the `js` key prefix.
+1. Escolha o intervalo do seu site e navegue até o prefixo da chave `js`.
 
-1. Choose **Upload**.
+1. Escolha ** Upload **.
 
-1. Choose **Add files**, select the local copy of `config.js` and then click **Next**.
+1. Escolha ** Adicionar arquivos **, selecione a cópia local do `config.js` e clique em ** Avançar **.
 
-1. Choose **Next** without changing any defaults through the `Set permissions` and `Set properties` sections.
+1. Escolha ** Next ** sem alterar nenhum padrão através das seções `Set permissions` e` Set properties`.
 
-1. Choose **Upload** on the `Review` section.
+1. Escolha ** Upload ** na seção `Review`.
 
-</p></details>
+</p> </details>
 
-## Implementation Validation
+## Validação de Implementação
 
-**Note:** It's possible that you will see a delay between updating the config.js file in your S3 bucket and when the updated content is visible in your browser. You should also ensure that you clear your browser cache before executing the following steps.
+** Nota: ** É possível que você veja um atraso entre atualizar o arquivo config.js no seu bucket do S3 e quando o conteúdo atualizado estiver visível em seu navegador. Você também deve garantir que você limpe o cache do navegador antes de executar as etapas a seguir.
 
-1. Visit `/ride.html` under your website domain.
+1. Visite `/ ride.html` sob o domínio do seu site.
 
-1. If you are redirected to the sign in page, sign in with the user you created in the previous module.
+1. Se você for redirecionado para a página de login, faça login com o usuário que você criou no módulo anterior.
 
-1. After the map has loaded, click anywhere on the map to set a pickup location.
+1. Depois que o mapa for carregado, clique em qualquer lugar no mapa para definir um local de coleta.
 
-1. Choose **Request Unicorn**. You should see a notification in the right sidebar that a unicorn is on its way and then see a unicorn icon fly to your pickup location.
+1. Escolha ** Solicitar Unicórnio **. Você deve ver uma notificação na barra lateral direita de que um unicórnio está a caminho e, em seguida, ver um ícone de unicórnio voando para o seu local de retirada.
 
-Congratulations, you have completed the Wild Rydes Web Application Workshop! Check out our [other workshops](../../README.md#workshops) covering additional serverless use cases.
+Parabéns, você completou o Workshop de Aplicações Web Wild Rydes! Confira nossos [outros workshops] (../../ README.md # workshops) cobrindo casos adicionais de uso sem servidor.
 
-See this workshop's [cleanup guide](../9_CleanUp) for instructions on how to delete the resources you've created.
+Veja o [guia de limpeza] deste workshop (../ 9_CleanUp) para obter instruções sobre como excluir os recursos que você criou.
