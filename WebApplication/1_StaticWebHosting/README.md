@@ -147,6 +147,6 @@ Depois de concluir essas etapas de implementação, você poderá acessar seu si
 
 Visite a URL base do seu site (este é a URL que você anotou na seção 4) no navegador de sua escolha. Você deve ver a página inicial do Wild Rydes exibida. Se você precisar pesquisar o URL base, visite o console do S3, selecione seu bucket e clique no cartão ** Static Web Hosting ** na guia ** Properties **.
 
-Se a página renderizar corretamente (veja abaixo uma captura de tela de exemplo), você pode passar para o próximo módulo, [User Management] (../ 2_UserManagement).
+Se a página renderizar corretamente (veja abaixo uma captura de tela de exemplo), você pode passar para o próximo módulo, ![Autenticação de usuários](../2_UserManagement).
 
 ![Wild Rydes homepage screenshot](../images/wildrydes-homepage.png)
