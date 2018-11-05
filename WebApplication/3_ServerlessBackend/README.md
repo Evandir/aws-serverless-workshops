@@ -59,19 +59,19 @@ Anexe a diretiva gerenciada chamada `AWSLambdaBasicExecutionRole` a essa funçã
 
 1. No AWS Management Console, clique em ** Serviços ** e selecione ** IAM ** na seção Segurança, identidade e conformidade.
 
-1. Selecione ** Funções ** na barra de navegação à esquerda e, em seguida, escolha ** Criar nova função **.
+1. Selecione ** Roles ** na barra de navegação à esquerda e, em seguida, escolha ** Criar nova Role **.
 
-1. Selecione ** Lambda ** para o tipo de função no grupo ** AWS service ** e clique em ** Next: Permissions **
+1. Selecione ** Lambda ** para o tipo de Role no grupo ** AWS service ** e clique em ** Next: Permissions **
 
-1. Comece a digitar `AWSLambdaBasicExecutionRole` na caixa de texto ** Filter ** e marque a caixa ao lado dessa função.
+1. Comece a digitar `AWSLambdaBasicExecutionRole` na caixa de texto ** Filter ** e marque a caixa ao lado dessa Role.
 
 1. Clique em ** Próximo: Revisar **.
 
-1. Digite `WildRydesLambda` para o ** Nome da função **.
+1. Digite `WildRydesLambda` para o ** Nome da Role **.
 
-1. Escolha ** Criar papel **.
+1. Escolha ** Criar Role **.
 
-1. Digite `WildRydesLambda` na caixa de filtro na página Funções e escolha a função que você acabou de criar.
+1. Digite `WildRydesLambda` na caixa de filtro na página Roles e escolha a Role que você acabou de criar.
 
 1. Na guia Permissões, escolha o link ** Adicionar política in-line ** no canto inferior direito para criar uma nova política in-line.
     ![Inline policies screenshot](../images/inline-policies.png)
