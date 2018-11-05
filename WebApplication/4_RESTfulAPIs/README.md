@@ -8,7 +8,7 @@ O diagrama acima mostra como o componente do API Gateway que você criará neste
 
 O site estático que você implantou no primeiro módulo já tem uma página configurada para interagir com a API que você criará neste módulo. A página em /ride.html possui uma interface simples baseada em mapas para solicitar um passeio de unicórnio. Depois de autenticar usando a página /signin.html, seus usuários poderão selecionar seu local de retirada clicando em um ponto no mapa e, em seguida, solicitando uma carona escolhendo o botão "Solicitar unicórnio" no canto superior direito.
 
-Este módulo enfocará as etapas necessárias para criar os componentes de nuvem da API, mas se você estiver interessado em saber como funciona o código do navegador que chama essa API, inspecione o [ride.js] (../ 1_StaticWebHosting / website /js/ride.js) arquivo do site. Nesse caso, o aplicativo usa o método [ajax ()] do jQuery (https://api.jquery.com/jQuery.ajax/) para fazer a solicitação remota.
+Este módulo enfocará as etapas necessárias para criar os componentes de nuvem da API, mas se você estiver interessado em saber como funciona o código do navegador que chama essa API, inspecione o [ride.js](../1_StaticWebHosting/website/js/ride.js) arquivo do site. Nesse caso, o aplicativo usa o método [ajax ()] do jQuery (https://api.jquery.com/jQuery.ajax/) para fazer a solicitação remota.
 
 
 ## Instruções de Implementação
@@ -41,10 +41,10 @@ Use o console do Amazon API Gateway para criar uma nova API.
 
 ### 2. Criar um autorizador de pools de usuários do Cognito
 
-#### Fundo
-O Amazon API Gateway pode usar os tokens JWT retornados pelos pools de usuários do Cognito para autenticar chamadas de API. Nesta etapa, você configurará um autorizador para sua API para usar o pool de usuários que você criou no [módulo 2] (../ 2_UserManagement).
+#### Contexto
+O Amazon API Gateway pode usar os tokens JWT retornados pelos pools de usuários do Cognito para autenticar chamadas de API. Nesta etapa, você configurará um autorizador para sua API para usar o pool de usuários que você criou no [módulo 2](../2_UserManagement).
 
-#### Instruções de alto nível
+#### Instruções gerais
 No console do Amazon API Gateway, crie um novo autorizador do pool de usuários do Cognito para sua API. Configure-o com os detalhes do pool de usuários que você criou no módulo anterior. Você pode testar a configuração no console copiando e colando o token de autenticação apresentado a você depois de efetuar login através da página /signin.html do seu site atual.
 
 <details>
@@ -62,7 +62,7 @@ No console do Amazon API Gateway, crie um novo autorizador do pool de usuários 
 
 1. Digite `WildRydes` (ou o nome que você forneceu ao seu pool de usuários) na entrada ** do Cognito User Pool **.
 
-1. Digite "Autorização" para a ** Fonte do Token **.
+1. Digite "Authorization" para a ** Fonte do Token **.
 
 1. Escolha ** Criar **.
 
@@ -88,7 +88,7 @@ No console do Amazon API Gateway, crie um novo autorizador do pool de usuários 
 
 </p> </details>
 
-### 3. Crie um novo recurso e método
+### 3. Crie um novo resource e método
 Crie um novo recurso chamado /ride na sua API. Em seguida, crie um método POST para esse recurso e configure-o para usar uma integração de proxy do Lambda respaldada pela função RequestUnicorn criada na primeira etapa deste módulo.
 
 <details>
@@ -157,7 +157,7 @@ No console do Amazon API Gateway, escolha Ações, Implantar API. Você será so
 </p> </details>
 
 ### 5. Atualize o Config do site
-Atualize o arquivo /js/config.js na implantação do seu site para incluir o URL de invocação do estágio que você acabou de criar. Você deve copiar o URL de chamada diretamente da parte superior da página do editor de palco no console do Amazon API Gateway e colá-lo na chave \ _config.api.invokeUrl do arquivo /js/config.js de seus sites. Certifique-se de que, ao atualizar o arquivo de configuração, ele ainda contenha as atualizações feitas no módulo anterior para o conjunto de usuários do Cognito.
+Atualize o arquivo /js/config.js na implantação do seu site para incluir o URL de invocação do estágio que você acabou de criar. Você deve copiar o URL de chamada diretamente da parte superior da página do editor de palco no console do Amazon API Gateway e colá-lo na chave \_config.api.invokeUrl do arquivo /js/config.js de seus sites. Certifique-se de que, ao atualizar o arquivo de configuração, ele ainda contenha as atualizações feitas no módulo anterior para o conjunto de usuários do Cognito.
 
 <details>
 <summary> <strong> Instruções passo a passo (expanda para detalhes) </strong> </summary> <p>
@@ -187,7 +187,7 @@ Se você completou o módulo 2 manualmente, você pode editar o arquivo `config.
 
 1. No AWS Management Console, escolha ** Serviços ** e selecione ** S3 ** em Armazenamento.
 
-1. Escolha o intervalo do seu site e navegue até o prefixo da chave `js`.
+1. Escolha o intervalo do seu site e navegue até a pasta `js`.
 
 1. Escolha ** Upload **.
 
